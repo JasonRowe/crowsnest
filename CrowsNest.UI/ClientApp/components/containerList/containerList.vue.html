@@ -1,0 +1,29 @@
+<template>
+	<div>
+		<h1>Containers</h1>
+
+
+		<table v-if="containers.length" class="table">
+			<thead>
+				<tr>
+					<th>State</th>
+					<th>Name</th>
+					<th>Image</th>
+					<th>Published Ports</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="item in containers">
+					<td>{{ item.State }}</td>
+					<td>{{ item.Names[0] }}</td>
+					<td>{{ item.Image }}</td>
+					<td><span v-for="port in item.Ports"><span v-if="port.PublicPort">{{ port.PublicPort}}:{{ port.PrivatePort}} </span></span></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<p v-else><em>Loading...</em></p>
+	</div>
+</template>
+
+<script src="./containerList.ts"></script>
