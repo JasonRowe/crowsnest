@@ -30,13 +30,25 @@ namespace CrowsNest.UI.Controllers
 		}
 
 		[HttpGet("[action]")]
-		public async Task<IList<ContainerListViewModel>> List(int limit)
+		public async Task<bool> Start(string id){
+			var result = false;
+
+			using (var client = this.dockerClientFactory.Create())
+			{
+				result = await client.Containers.StartContainerAsync(id, new ContainerStartParameters());
+			}
+
+			return result;
+		}
+
+		[HttpGet("[action]")]
+		public async Task<IList<ContainerListViewModel>> List(int limit, bool showAll)
 		{
 			var containerModels = new List<ContainerListViewModel>();
 
 			using (var client = this.dockerClientFactory.Create())
 			{
-				var dockerContainers = await client.Containers.ListContainersAsync(new ContainersListParameters() { Limit = limit });
+				var dockerContainers = await client.Containers.ListContainersAsync(new ContainersListParameters() { All = showAll, Limit = limit });
 
 				foreach (var container in dockerContainers)
 				{
