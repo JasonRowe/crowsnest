@@ -57,4 +57,10 @@ export default class ContainersComponent extends Vue {
 			});
 		});
 	}
+
+	kill() {
+		this.checkedContainers.forEach(container => {
+			fetch(`api/Containers/Kill/?id=${container.id}`)
+		});
+	}
 }

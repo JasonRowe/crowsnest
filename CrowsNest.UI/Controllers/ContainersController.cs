@@ -30,6 +30,14 @@ namespace CrowsNest.UI.Controllers
 		}
 
 		[HttpGet("[action]")]
+		public async void Kill(string id){
+			using (var client = this.dockerClientFactory.Create())
+			{
+				await client.Containers.KillContainerAsync(id, new ContainerKillParameters());
+			}
+		}
+
+		[HttpGet("[action]")]
 		public async Task<bool> Start(string id){
 			var result = false;
 
