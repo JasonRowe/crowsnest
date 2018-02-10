@@ -5,6 +5,8 @@ namespace CrowsNest.UI
 {
 	public class ContainerListViewModel
 	{
+		public string ID { get; set; }
+		
 		public IList<string> Names { get; set; }
 
 		public string Image { get; set; }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Docker.DotNet.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,18 @@ namespace CrowsNest.UI.Controllers
 		}
 
 		[HttpGet("[action]")]
+		public async Task<bool> Stop(string id){
+			var result = false;
+
+			using (var client = this.dockerClientFactory.Create())
+			{
+				result = await client.Containers.StopContainerAsync(id, new ContainerStopParameters());
+			}
+
+			return result;
+		}
+
+		[HttpGet("[action]")]
 		public async Task<IList<ContainerListViewModel>> List(int limit)
 		{
 			var containerModels = new List<ContainerListViewModel>();
@@ -27,19 +40,11 @@ namespace CrowsNest.UI.Controllers
 
 				foreach (var container in dockerContainers)
 				{
-					var ipAddresses = new List<string>();
-
-					foreach(var networkName in container.NetworkSettings.Networks.Keys){
-
-						var ip = container.NetworkSettings.Networks[networkName].IPAddress;
-
-						if(!string.IsNullOrWhiteSpace(ip)){
-							ipAddresses.Add(ip);
-						}
-					}
+					var ipAddresses = FindNetworkIPAddress(container.NetworkSettings.Networks);
 
 					var model = new ContainerListViewModel
 					{
+						ID = container.ID,
 						Image = container.Image,
 						Names = container.Names,
 						Ports = container.Ports,
@@ -52,6 +57,22 @@ namespace CrowsNest.UI.Controllers
 			}
 
 			return containerModels;
+		}
+
+		private List<string> FindNetworkIPAddress(IDictionary<string, EndpointSettings> networks)
+		{
+			var ipAddresses = new List<string>();
+
+			foreach(var networkName in networks.Keys){
+
+				var ip = networks[networkName].IPAddress;
+
+				if(!string.IsNullOrWhiteSpace(ip)){
+					ipAddresses.Add(ip);
+				}
+			}
+
+			return ipAddresses;
 		}
 	}
 }

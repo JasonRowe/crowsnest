@@ -3,7 +3,13 @@
 		<h1>Containers</h1>
 
 
-		<table v-if="containers.length" class="table">
+		<nav class="navbar navbar-default">
+			<div class="container">
+				<button v-on:click="stop" type="button" class="btn btn-default navbar-btn btn-primary">Stop</button>
+			</div>
+		  </nav>
+
+		<table class="table">
 			<thead>
 				<tr>
 					<th></th>
@@ -16,7 +22,7 @@
 			</thead>
 			<tbody>
 				<tr v-for="item in containers">
-					<td><input type="checkbox"></td>
+					<td><input type="checkbox" v-bind:value="item" v-model="checkedContainers"></td>
 					<td>{{ item.state }}</td>
 					<td>{{ item.names[0] }}</td>
 					<td>{{ item.image }}</td>
@@ -25,8 +31,6 @@
 				</tr>
 			</tbody>
 		</table>
-
-		<p v-else><em>Loading...</em></p>
 	</div>
 </template>
 
