@@ -7,12 +7,14 @@ interface PortInfo {
 }
 
 interface Container {
-	State: string;
-	Names: string [];
-	Image: number;
-	Ports: PortInfo [];
+	state: string;
+	names: string [];
+	image: number;
+	ports: PortInfo[];
+	ipAddresses: string[];
 }
 
+// @ts-ignore
 @Component
 export default class ContainersComponent extends Vue {
 	containers: Container[] = [];

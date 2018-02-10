@@ -322,3 +322,5 @@ ASALocalRun/
 
 # MSBuild Binary and Structured Log
 *.binlog
+/CrowsNest.UI/.vscode/launch.json
+/CrowsNest.UI/.vscode/tasks.json

@@ -6,18 +6,22 @@
 		<table v-if="containers.length" class="table">
 			<thead>
 				<tr>
+					<th></th>
 					<th>State</th>
 					<th>Name</th>
 					<th>Image</th>
+					<th>IPAddress</th>
 					<th>Published Ports</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr v-for="item in containers">
-					<td>{{ item.State }}</td>
-					<td>{{ item.Names[0] }}</td>
-					<td>{{ item.Image }}</td>
-					<td><span v-for="port in item.Ports"><span v-if="port.PublicPort">{{ port.PublicPort}}:{{ port.PrivatePort}} </span></span></td>
+					<td><input type="checkbox"></td>
+					<td>{{ item.state }}</td>
+					<td>{{ item.names[0] }}</td>
+					<td>{{ item.image }}</td>
+					<td><span v-for="ip in item.ipAddresses">{{ ip }} </span></td>
+					<td><span v-for="port in item.ports"><span v-if="port.PublicPort">{{ port.PublicPort }}:{{ port.PrivatePort }} </span></span></td>
 				</tr>
 			</tbody>
 		</table>

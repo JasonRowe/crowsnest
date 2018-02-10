@@ -17,12 +17,41 @@ namespace CrowsNest.UI.Controllers
 		}
 
 		[HttpGet("[action]")]
-		public async Task<IList<ContainerListResponse>> List(int limit)
+		public async Task<IList<ContainerListViewModel>> List(int limit)
 		{
-			using (var client = dockerClientFactory.Create())
+			var containerModels = new List<ContainerListViewModel>();
+
+			using (var client = this.dockerClientFactory.Create())
 			{
-				return await client.Containers.ListContainersAsync(new ContainersListParameters() { Limit = limit });
+				var dockerContainers = await client.Containers.ListContainersAsync(new ContainersListParameters() { Limit = limit });
+
+				foreach (var container in dockerContainers)
+				{
+					var ipAddresses = new List<string>();
+
+					foreach(var networkName in container.NetworkSettings.Networks.Keys){
+
+						var ip = container.NetworkSettings.Networks[networkName].IPAddress;
+
+						if(!string.IsNullOrWhiteSpace(ip)){
+							ipAddresses.Add(ip);
+						}
+					}
+
+					var model = new ContainerListViewModel
+					{
+						Image = container.Image,
+						Names = container.Names,
+						Ports = container.Ports,
+						State = container.State,
+						IPAddresses = ipAddresses,
+					};
+
+					containerModels.Add(model);
+				}
 			}
+
+			return containerModels;
 		}
 	}
 }
